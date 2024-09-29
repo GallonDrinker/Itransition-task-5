@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import RegionSelector from './components/RegionSelector';
+import ErrorSlider from './components/ErrorSlider';
+import SeedInput from './components/SeedInput';
+import DataTable from './components/DataTable';
+import { generateData } from './utils'; // Import from utils
 
 function App() {
+  const [region, setRegion] = useState('USA');
+  const [errorRate, setErrorRate] = useState(0);
+  const [seed, setSeed] = useState(Math.random().toString(36).substr(2, 9));
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData(generateData(20, region, errorRate, seed));
+  }, [region, errorRate, seed]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Fake User Data Generator</h1>
+      <div className="flex space-x-4 mb-6">
+        <RegionSelector region={region} setRegion={setRegion} />
+        <ErrorSlider errorRate={errorRate} setErrorRate={setErrorRate} />
+        <SeedInput seed={seed} setSeed={setSeed} />
+      </div>
+      <DataTable data={data} setData={setData} region={region} errorRate={errorRate} seed={seed} />
     </div>
   );
 }
